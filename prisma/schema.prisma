@@ -1,0 +1,37 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed password
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pokemon {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  pokedexId      Int?     @unique // National Pokedex number
+  height         Float
+  weight         Float
+  image          String?
+  imageShiny     String?
+  types          String[] // Array of types (e.g., ["Grass", "Poison"])
+  abilities      String[] // Array of abilities
+  baseStats      Json?    // Stats object: {hp, attack, defense, spAttack, spDefense, speed}
+  description    String?  // Flavor text/description
+  species        String?  // Pokemon species name
+  isCustom       Boolean  @default(false)
+  createdByUserId String? // User ID who created this Pokemon (for authorization)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+

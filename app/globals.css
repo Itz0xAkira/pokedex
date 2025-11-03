@@ -1,0 +1,10 @@
+/**
+ * Global Styles
+ * 
+ * TODO: Add Tailwind directives and custom styles
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
