@@ -2,24 +2,36 @@
  * PokemonResultsGrid Component
  * 
  * Displays the grid of Pokémon cards with loading and empty states.
+ * 
+ * Features:
+ * - Responsive 4-column grid layout
+ * - Loading spinner while data is being fetched
+ * - Empty state message when no Pokémon are found
+ * - Individual Pokémon cards rendered via PokemonCard component
+ * 
+ * Props:
+ * - pokemon: Array of Pokémon to display
+ * - loading: Whether data is currently being fetched
  */
 
 'use client'
 
-import React from 'react'
-import PokemonCard from '../pokemon/PokemonCard'
+import React from 'react';
+import PokemonCard from '../pokemon/PokemonCard';
 
 interface Pokemon {
-  id: string
-  name: string
-  pokedexId: number | null
-  image: string | null
-  types: string[]
+  id: string;
+  name: string;
+  pokedexId: number | null;
+  image: string | null;
+  types: string[];
 }
 
 interface PokemonResultsGridProps {
-  pokemon: Pokemon[]
-  loading: boolean
+  /** Array of Pokémon to display */
+  pokemon: Pokemon[];
+  /** Whether data is currently being fetched */
+  loading: boolean;
 }
 
 export default function PokemonResultsGrid({
@@ -28,6 +40,7 @@ export default function PokemonResultsGrid({
 }: PokemonResultsGridProps) {
   return (
     <>
+      {/* Loading State */}
       {loading && (
         <div className="text-center py-20">
           <div 
@@ -40,6 +53,7 @@ export default function PokemonResultsGrid({
         </div>
       )}
 
+      {/* Results Grid */}
       {!loading && pokemon.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {pokemon.map((poke) => (
@@ -48,6 +62,7 @@ export default function PokemonResultsGrid({
         </div>
       )}
 
+      {/* Empty State */}
       {!loading && pokemon.length === 0 && (
         <div className="text-center py-20">
           <p 
@@ -65,6 +80,7 @@ export default function PokemonResultsGrid({
         </div>
       )}
     </>
-  )
+  );
 }
+
 

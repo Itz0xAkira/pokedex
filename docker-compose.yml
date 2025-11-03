@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: poke-postgres
+    environment:
+      POSTGRES_USER: pokemon
+      POSTGRES_PASSWORD: pokemon123
+      POSTGRES_DB: pokemon_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pokemon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poke-app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://pokemon:pokemon123@postgres:5432/pokemon_db?schema=public
+      NODE_ENV: development
+      JWT_SECRET: ${JWT_SECRET:-536157ed9d93cb3a5502f1d2f81641c5}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  postgres_data:
+

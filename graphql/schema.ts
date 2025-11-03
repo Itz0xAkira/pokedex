@@ -1,21 +1,12 @@
-/**
- * GraphQL Schema Definition
- * 
- * This file defines all types, queries, mutations, and inputs for the Pokemon API.
- * This is the foundation of our GraphQL API - all resolvers will implement these types.
- */
-
 import { gql } from 'graphql-tag'
 
 export const typeDefs = gql`
-  # User Type
   type User {
     id: ID!
     email: String!
     createdAt: String!
   }
 
-  # Pokemon Stats Type
   type PokemonStats {
     hp: Int
     attack: Int
@@ -25,7 +16,6 @@ export const typeDefs = gql`
     speed: Int
   }
 
-  # Pokemon Type
   type Pokemon {
     id: ID!
     name: String!
@@ -45,7 +35,6 @@ export const typeDefs = gql`
     updatedAt: String!
   }
 
-  # Pagination Types
   type PaginationInfo {
     page: Int!
     pageSize: Int!
@@ -58,7 +47,6 @@ export const typeDefs = gql`
     pagination: PaginationInfo!
   }
 
-  # Sorting Inputs
   input SortInput {
     field: SortField!
     direction: SortDirection!
@@ -76,7 +64,6 @@ export const typeDefs = gql`
     DESC
   }
 
-  # Filter Inputs
   input FilterInput {
     name: String
     heightMin: Float
@@ -90,7 +77,6 @@ export const typeDefs = gql`
     ability: String
   }
 
-  # Authentication Inputs
   input LoginInput {
     email: String!
     password: String!
@@ -101,7 +87,6 @@ export const typeDefs = gql`
     password: String!
   }
 
-  # Pokemon CRUD Inputs
   input CreatePokemonInput {
     name: String!
     height: Float!
@@ -137,39 +122,27 @@ export const typeDefs = gql`
     species: String
   }
 
-  # Authentication Response
   type AuthPayload {
     token: String!
     user: User!
   }
 
-  # Queries
   type Query {
-    # Get paginated list of Pokemon with filtering and sorting
     pokemons(
       page: Int = 1
       pageSize: Int = 20
       sort: SortInput
       filter: FilterInput
     ): PokemonConnection!
-    
-    # Get a single Pokemon by ID, pokedexId, or name
     pokemon(id: ID, pokedexId: Int, name: String): Pokemon
-    
-    # Get current authenticated user
     me: User
   }
 
-  # Mutations
   type Mutation {
-    # User authentication
     register(input: RegisterInput!): AuthPayload!
     login(input: LoginInput!): AuthPayload!
-    
-    # Pokemon CRUD operations
     createPokemon(input: CreatePokemonInput!): Pokemon!
     updatePokemon(input: UpdatePokemonInput!): Pokemon!
     deletePokemon(id: ID!): Boolean!
   }
 `
-

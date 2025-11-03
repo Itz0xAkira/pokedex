@@ -1,43 +1,41 @@
 /**
- * Navbar Component
- * 
- * Global navigation bar displayed at the top of all pages.
- * Contains:
- * - "Pokédex" title/logo (clickable to go home)
- * - "Add New Pokemon" button (only if logged in)
- * - "Login" / "Logout" button (based on auth status)
- * 
- * Uses GraphQL ME_QUERY to check authentication status.
+ * Global navigation bar with authentication-aware menu items.
+ * Shows different actions based on user login status.
  */
 
 'use client'
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
-import { useQuery } from '@apollo/client'
-import Link from 'next/link'
-import { ME_QUERY } from '@/lib/graphql/queries'
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import Link from 'next/link';
+
+const ME_QUERY = gql`
+  query Me {
+    me {
+      id
+      email
+    }
+  }
+`;
 
 export default function Navbar() {
-  const router = useRouter()
+  const router = useRouter();
   
   // Check authentication status
   const { data, loading } = useQuery(ME_QUERY, {
     errorPolicy: 'ignore',
-  })
+  });
 
-  const isAuthenticated = !!data?.me
+  const isAuthenticated = !!data?.me;
 
-  /**
-   * Handle logout
-   * Clears the JWT token from localStorage and redirects to login
-   */
+  // Clear token and reload to reset Apollo cache
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    router.push('/login')
-    // Force a page reload to clear Apollo cache
-    window.location.reload()
-  }
+    localStorage.removeItem('token');
+    router.push('/login');
+    window.location.reload();
+  };
 
   return (
     <nav 
@@ -46,7 +44,6 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
-          {/* Left: Pokédex Title/Logo */}
           <Link 
             href="/"
             className="text-2xl font-normal text-gray-800 hover:text-gray-900 transition-colors"
@@ -55,9 +52,7 @@ export default function Navbar() {
             Pokédex
           </Link>
 
-          {/* Right: Action Buttons */}
           <div className="flex items-center gap-4">
-            {/* Add New Pokemon Button - Only show if logged in */}
             {isAuthenticated && (
               <Link
                 href="/pokemon/new"
@@ -73,7 +68,7 @@ export default function Navbar() {
               </Link>
             )}
 
-            {/* Login/Logout Button */}
+
             {loading ? (
               <div className="w-20 h-10 bg-gray-700 rounded-lg animate-pulse" />
             ) : isAuthenticated ? (
@@ -107,6 +102,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
 

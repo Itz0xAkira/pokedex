@@ -1,16 +1,38 @@
 /**
- * Login/Signup Page
- * 
- * Authentication page for user login and registration.
- * Matches the main theme with gray background, Flexo fonts, and consistent styling.
+ * Authentication page with login/registration toggle.
+ * Handles user authentication and token storage.
  */
 
 'use client'
 
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
+import { gql } from '@apollo/client'
 import { useRouter } from 'next/navigation'
-import { LOGIN_MUTATION, REGISTER_MUTATION } from '@/lib/graphql/queries'
+
+const LOGIN_MUTATION = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      token
+      user {
+        id
+        email
+      }
+    }
+  }
+`
+
+const REGISTER_MUTATION = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+      token
+      user {
+        id
+        email
+      }
+    }
+  }
+`
 
 export default function LoginPage() {
   const router = useRouter()
@@ -34,6 +56,7 @@ export default function LoginPage() {
         },
       })
 
+      // Store JWT token and redirect to main app
       if (data) {
         const token = isLogin ? data.login.token : data.register.token
         localStorage.setItem('token', token)
@@ -47,7 +70,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#7f7f7f' }}>
       <div className="max-w-md w-full px-6">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 
             className="text-4xl font-normal mb-4 text-gray-300" 
@@ -62,8 +84,6 @@ export default function LoginPage() {
             {isLogin ? 'Welcome Back!' : 'Join the Adventure!'}
           </h2>
         </div>
-
-        {/* Card */}
         <div 
           className="rounded-lg p-8 md:p-10"
           style={{ 
@@ -172,4 +192,3 @@ export default function LoginPage() {
     </div>
   )
 }
-

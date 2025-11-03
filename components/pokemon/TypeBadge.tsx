@@ -1,13 +1,7 @@
-/**
- * TypeBadge Component
- * 
- * Displays a Pokemon type with appropriate color coding.
- */
-
-import React from 'react'
+import React from 'react';
 
 const typeColors: {
-  [key: string]: string
+  [key: string]: string;
 } = {
   Bug: '#A8B820',
   Dark: '#705848',
@@ -27,11 +21,11 @@ const typeColors: {
   Rock: '#B8A038',
   Steel: '#B8B8D0',
   Water: '#6890F0'
-}
+};
 
 interface TypeBadgeProps {
-  type: string
-  className?: string
+  type: string;
+  className?: string;
 }
 
 export default function TypeBadge({ type, className = '' }: TypeBadgeProps) {
@@ -42,6 +36,8 @@ export default function TypeBadge({ type, className = '' }: TypeBadgeProps) {
     >
       {type}
     </div>
-  )
+  );
 }
+
+
 

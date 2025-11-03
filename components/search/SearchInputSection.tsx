@@ -1,18 +1,17 @@
 /**
- * SearchInputSection Component
- * 
- * Displays the "Name or Number" search input field with an orange search button.
+ * Primary search input for Pokemon name or Pokedex number lookup.
+ * Includes search button and helpful guidance text.
  */
 
 'use client'
 
-import React from 'react'
-import { SearchIcon } from '../shared/Icons'
+import React from 'react';
+import { SearchIcon } from '../shared/Icons';
 
 interface SearchInputSectionProps {
-  searchTerm: string
-  onSearchTermChange: (value: string) => void
-  onSearch: () => void
+  searchTerm: string;
+  onSearchTermChange: (value: string) => void;
+  onSearch: () => void;
 }
 
 export default function SearchInputSection({
@@ -20,11 +19,12 @@ export default function SearchInputSection({
   onSearchTermChange,
   onSearch,
 }: SearchInputSectionProps) {
+  // Trigger search on Enter key press
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      onSearch()
+      onSearch();
     }
-  }
+  };
 
   return (
     <div 
@@ -70,7 +70,7 @@ export default function SearchInputSection({
           }}
           aria-label="Search for Pokémon by name or number"
         />
-        
+
         <button 
           onClick={onSearch}
           style={{
@@ -105,6 +105,7 @@ export default function SearchInputSection({
         Use the Advanced Search to explore Pokémon by type, weakness, Ability, and more!
       </p>
     </div>
-  )
+  );
 }
+
 

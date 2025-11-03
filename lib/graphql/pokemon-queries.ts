@@ -2,7 +2,7 @@
  * Pokemon Detail Page GraphQL Queries
  */
 
-import { gql } from '@apollo/client'
+import { gql } from '@apollo/client';
 
 export const POKEMON_QUERY = gql`
   query Pokemon($name: String) {
@@ -30,7 +30,7 @@ export const POKEMON_QUERY = gql`
       createdByUserId
     }
   }
-`
+`;
 
 export const POKEMONS_LIST_QUERY = gql`
   query Pokemons($page: Int, $pageSize: Int, $sort: SortInput) {
@@ -42,34 +42,7 @@ export const POKEMONS_LIST_QUERY = gql`
       }
     }
   }
-`
-
-export const CREATE_POKEMON_MUTATION = gql`
-  mutation CreatePokemon($input: CreatePokemonInput!) {
-    createPokemon(input: $input) {
-      id
-      name
-      pokedexId
-      height
-      weight
-      image
-      imageShiny
-      types
-      abilities
-      baseStats {
-        hp
-        attack
-        defense
-        spAttack
-        spDefense
-        speed
-      }
-      description
-      species
-      isCustom
-    }
-  }
-`
+`;
 
 export const UPDATE_POKEMON_MUTATION = gql`
   mutation UpdatePokemon($input: UpdatePokemonInput!) {
@@ -94,11 +67,5 @@ export const UPDATE_POKEMON_MUTATION = gql`
       species
     }
   }
-`
-
-export const DELETE_POKEMON_MUTATION = gql`
-  mutation DeletePokemon($id: ID!) {
-    deletePokemon(id: $id)
-  }
-`
+`;
 

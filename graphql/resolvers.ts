@@ -1,32 +1,33 @@
-/**
- * GraphQL Resolvers
- * 
- * Implements all resolvers for queries and mutations.
- * Handles authentication, authorization, and data operations.
- */
-
-import { GraphQLContext } from './context'
+import { Context } from './context'
 import { hashPassword, verifyPassword, getUserByEmail } from '@/lib/auth'
 import { generateToken } from '@/lib/jwt'
-import type { Prisma } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
+import type { 
+  PokemonResolverParent, 
+  PokemonWhereInput, 
+  PokemonOrderByInput,
+  PokemonUpdateInput,
+  CreatePokemonInput,
+  UpdatePokemonInput,
+} from '@/types/graphql'
+import type { PokemonStats } from '@/types/pokemon'
 
-// Pokemon baseStats field resolver - converts JSON to object
 export const resolvers = {
   Pokemon: {
-    baseStats: (parent: any): any => {
+    // Transform baseStats from JSON string to object for GraphQL response
+    baseStats: (parent: PokemonResolverParent): PokemonStats | null => {
       if (!parent.baseStats) return null
       return typeof parent.baseStats === 'string' 
         ? JSON.parse(parent.baseStats) 
         : parent.baseStats
     },
   },
-
   Query: {
     pokemons: async (
       _: unknown,
       args: {
-        page?: number
-        pageSize?: number
+        page: number
+        pageSize: number
         sort?: { field: 'NAME' | 'POKEDEX_ID' | 'HEIGHT' | 'WEIGHT'; direction: 'ASC' | 'DESC' }
         filter?: {
           name?: string
@@ -40,14 +41,13 @@ export const resolvers = {
           pokedexIdMax?: number
           ability?: string
         }
-      },
-      context: GraphQLContext
+      }
     ) => {
       const { page = 1, pageSize = 20, sort, filter } = args
       const skip = (page - 1) * pageSize
 
-      // Build where clause
-      const where: Prisma.PokemonWhereInput = {}
+      // Build dynamic where clause based on filters
+      const where: PokemonWhereInput = {}
       
       if (filter?.name) {
         where.name = {
@@ -76,20 +76,15 @@ export const resolvers = {
         }
       }
 
-      // Handle types filter
       if (filter?.types && filter.types.length > 0) {
         where.types = {
           hasEvery: filter.types,
         }
       }
 
-      // Handle weaknesses filter
-      // Note: Since we don't store weaknesses in the DB, this is a simplified implementation
-      // In a real scenario, you'd need to compute weaknesses from types or store them separately
-      // For now, we'll skip this filter as we can't compute weaknesses without type effectiveness data
-      if (filter?.weaknesses && filter.weaknesses.length > 0) {
-        // Weaknesses filtering would require type effectiveness calculations
-        // This is a placeholder - actual implementation would need type chart data
+      // TODO: Implement weakness calculation from type effectiveness tables
+      if (filter?.weaknesses && filter.weaknesses.length > 0 && (!filter?.types || filter.types.length === 0)) {
+        // Placeholder for weakness filtering - requires type effectiveness computation
       }
 
       if (filter?.pokedexIdMin !== undefined || filter?.pokedexIdMax !== undefined) {
@@ -108,8 +103,8 @@ export const resolvers = {
         }
       }
 
-      // Build orderBy clause
-      let orderBy: Prisma.PokemonOrderByWithRelationInput = { name: 'asc' }
+      // Map GraphQL sort fields to Prisma field names
+      let orderBy: PokemonOrderByInput = { name: 'asc' }
       if (sort) {
         const fieldMap: Record<string, string> = {
           NAME: 'name',
@@ -117,20 +112,20 @@ export const resolvers = {
           HEIGHT: 'height',
           WEIGHT: 'weight',
         }
-        const direction = sort.direction.toLowerCase() as 'asc' | 'desc'
         orderBy = {
-          [fieldMap[sort.field]]: direction,
+          [fieldMap[sort.field]]: sort.direction.toLowerCase(),
         }
       }
 
+      // Execute paginated query and count in parallel for performance
       const [pokemons, totalCount] = await Promise.all([
-        context.prisma.pokemon.findMany({
+        prisma.pokemon.findMany({
           where,
           orderBy,
           skip,
           take: pageSize,
         }),
-        context.prisma.pokemon.count({ where }),
+        prisma.pokemon.count({ where }),
       ])
 
       const totalPages = Math.ceil(totalCount / pageSize)
@@ -146,60 +141,46 @@ export const resolvers = {
       }
     },
 
-    pokemon: async (
-      _: unknown, 
-      args: { id?: string | null; pokedexId?: number | null; name?: string | null },
-      context: GraphQLContext
-    ) => {
-      // Query by name (preferred method for URLs)
+    // Flexible Pokemon lookup by name (preferred), pokedexId, or internal ID
+    pokemon: async (_: unknown, args: { id?: string | null; pokedexId?: number | null; name?: string | null }) => {
       if (args.name != null) {
-        return context.prisma.pokemon.findUnique({
+        return prisma.pokemon.findUnique({
           where: { name: args.name },
         })
       }
-      // Query by pokedexId
       if (args.pokedexId != null) {
-        return context.prisma.pokemon.findUnique({
+        return prisma.pokemon.findUnique({
           where: { pokedexId: args.pokedexId },
         })
       }
-      // Fallback to CUID id for custom Pokemon or backward compatibility
       if (args.id != null) {
-        return context.prisma.pokemon.findUnique({
+        return prisma.pokemon.findUnique({
           where: { id: args.id },
         })
       }
       return null
     },
 
-    me: async (_: unknown, __: unknown, context: GraphQLContext) => {
+    me: async (_: unknown, __: unknown, context: Context) => {
       if (!context.userId) {
         return null
       }
-      const user = await context.prisma.user.findUnique({
+      return prisma.user.findUnique({
         where: { id: context.userId },
       })
-      return user ? {
-        id: user.id,
-        email: user.email,
-        createdAt: user.createdAt.toISOString(),
-      } : null
     },
   },
 
   Mutation: {
-    register: async (_: unknown, args: { input: { email: string; password: string } }, context: GraphQLContext) => {
+    register: async (_: unknown, args: { input: { email: string; password: string } }) => {
       const { email, password } = args.input
 
-      // Check if user already exists
       const existingUser = await getUserByEmail(email)
       if (existingUser) {
         throw new Error('User with this email already exists')
       }
-
-      // Hash password and create user
       const hashedPassword = await hashPassword(password)
-      const user = await context.prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           email,
           password: hashedPassword,
@@ -218,7 +199,7 @@ export const resolvers = {
       }
     },
 
-    login: async (_: unknown, args: { input: { email: string; password: string } }, context: GraphQLContext) => {
+    login: async (_: unknown, args: { input: { email: string; password: string } }) => {
       const { email, password } = args.input
 
       const user = await getUserByEmail(email)
@@ -246,27 +227,11 @@ export const resolvers = {
     createPokemon: async (
       _: unknown,
       args: { 
-        input: {
-          name: string
-          height: number
-          weight: number
-          image?: string | null
-          imageShiny?: string | null
-          types?: string[] | null
-          abilities?: string[] | null
-          baseStats?: {
-            hp?: number | null
-            attack?: number | null
-            defense?: number | null
-            spAttack?: number | null
-            spDefense?: number | null
-            speed?: number | null
-          } | null
-          description?: string | null
-          species?: string | null
+        input: CreatePokemonInput & {
+          imageShiny?: string
         }
       },
-      context: GraphQLContext
+      context: Context
     ) => {
       if (!context.userId) {
         throw new Error('Authentication required')
@@ -274,17 +239,13 @@ export const resolvers = {
 
       const { name, height, weight, image, imageShiny, types, abilities, baseStats, description, species } = args.input
 
-      // Check if Pokemon with this name already exists
-      const existing = await context.prisma.pokemon.findUnique({
+      const existing = await prisma.pokemon.findUnique({
         where: { name },
       })
       if (existing) {
         throw new Error('Pokemon with this name already exists')
       }
-
-      // Find the highest pokedexId and add 1
-      // If no Pokemon exist, start at 1
-      const lastPokemon = await context.prisma.pokemon.findFirst({
+      const lastPokemon = await prisma.pokemon.findFirst({
         where: {
           pokedexId: { not: null }
         },
@@ -296,53 +257,34 @@ export const resolvers = {
         }
       })
 
+      // Auto-increment Pokedex ID for new custom Pokemon
       const nextPokedexId = lastPokemon?.pokedexId ? lastPokemon.pokedexId + 1 : 1
 
-      const pokemon = await context.prisma.pokemon.create({
+      return prisma.pokemon.create({
         data: {
           name,
           height,
           weight,
-          image: image || null,
-          imageShiny: imageShiny || null,
+          image,
+          imageShiny,
           pokedexId: nextPokedexId,
           types: types || [],
           abilities: abilities || [],
           baseStats: baseStats || null,
-          description: description || null,
-          species: species || null,
+          description,
+          species,
           isCustom: true,
-          createdByUserId: context.userId, // Track ownership for authorization
+          createdByUserId: context.userId, // Track ownership for edit/delete permissions // Track ownership for authorization
         },
       })
-
-      return pokemon
     },
 
     updatePokemon: async (
       _: unknown,
       args: { 
-        input: {
-          id: string
-          name?: string | null
-          height?: number | null
-          weight?: number | null
-          image?: string | null
-          types?: string[] | null
-          abilities?: string[] | null
-          baseStats?: {
-            hp?: number | null
-            attack?: number | null
-            defense?: number | null
-            spAttack?: number | null
-            spDefense?: number | null
-            speed?: number | null
-          } | null
-          description?: string | null
-          species?: string | null
-        }
+        input: UpdatePokemonInput
       },
-      context: GraphQLContext
+      context: Context
     ) => {
       if (!context.userId) {
         throw new Error('Authentication required')
@@ -350,26 +292,21 @@ export const resolvers = {
 
       const { id, ...updateData } = args.input
 
-      // Check if Pokemon exists
-      const existing = await context.prisma.pokemon.findUnique({
+      const existing = await prisma.pokemon.findUnique({
         where: { id },
       })
       if (!existing) {
         throw new Error('Pokemon not found')
       }
 
-      // Authorization check: Only allow updating custom Pokemon created by the current user
       if (existing.isCustom && existing.createdByUserId !== context.userId) {
         throw new Error('Not authorized to modify this Pokemon')
       }
-      // Non-custom Pokemon (from API) cannot be modified
       if (!existing.isCustom) {
         throw new Error('Cannot modify official Pokemon')
       }
-
-      // If name is being updated, check for conflicts
       if (updateData.name && updateData.name !== existing.name) {
-        const nameConflict = await context.prisma.pokemon.findUnique({
+        const nameConflict = await prisma.pokemon.findUnique({
           where: { name: updateData.name },
         })
         if (nameConflict) {
@@ -377,8 +314,7 @@ export const resolvers = {
         }
       }
 
-      // Build update data, handling arrays and JSON properly
-      const data: Prisma.PokemonUpdateInput = {}
+      const data: PokemonUpdateInput = {}
       if (updateData.name !== undefined) data.name = updateData.name
       if (updateData.height !== undefined) data.height = updateData.height
       if (updateData.weight !== undefined) data.weight = updateData.weight
@@ -389,34 +325,32 @@ export const resolvers = {
       if (updateData.description !== undefined) data.description = updateData.description
       if (updateData.species !== undefined) data.species = updateData.species
 
-      return context.prisma.pokemon.update({
+      return prisma.pokemon.update({
         where: { id },
         data,
       })
     },
 
-    deletePokemon: async (_: unknown, args: { id: string }, context: GraphQLContext) => {
+    deletePokemon: async (_: unknown, args: { id: string }, context: Context) => {
       if (!context.userId) {
         throw new Error('Authentication required')
       }
 
-      const pokemon = await context.prisma.pokemon.findUnique({
+      const pokemon = await prisma.pokemon.findUnique({
         where: { id: args.id },
       })
       if (!pokemon) {
         throw new Error('Pokemon not found')
       }
 
-      // Authorization check: Only allow deleting custom Pokemon created by the current user
       if (pokemon.isCustom && pokemon.createdByUserId !== context.userId) {
         throw new Error('Not authorized to delete this Pokemon')
       }
-      // Non-custom Pokemon (from API) cannot be deleted
       if (!pokemon.isCustom) {
         throw new Error('Cannot delete official Pokemon')
       }
 
-      await context.prisma.pokemon.delete({
+      await prisma.pokemon.delete({
         where: { id: args.id },
       })
 

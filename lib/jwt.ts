@@ -1,11 +1,6 @@
-/**
- * JWT Token Utilities
- * 
- * Handles JWT token generation and verification for authentication
- */
-
 import jwt from 'jsonwebtoken'
 
+// Ensure JWT secret is configured
 const JWT_SECRET = process.env.JWT_SECRET
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required. Please set it in your .env file.')
@@ -16,10 +11,12 @@ export interface JwtPayload {
   email: string
 }
 
+// Generate JWT token with 7-day expiration
 export function generateToken(payload: JwtPayload): string {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
 }
 
+// Verify and decode JWT token
 export function verifyToken(token: string): JwtPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JwtPayload
@@ -27,3 +24,4 @@ export function verifyToken(token: string): JwtPayload | null {
     return null
   }
 }
+

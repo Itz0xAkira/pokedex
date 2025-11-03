@@ -1,71 +1,64 @@
-/**
- * PokemonCard Component
- * 
- * Displays a Pokemon card in the search results grid.
- */
-
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
-import TypeBadge from './TypeBadge'
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import TypeBadge from './TypeBadge';
 
 interface PokemonCardProps {
   pokemon: {
-    id: string
-    name: string
-    pokedexId: number | null
-    image: string | null
-    types: string[]
-  }
+    id: string;
+    name: string;
+    pokedexId: number | null;
+    image: string | null;
+    types: string[];
+  };
 }
 
-/**
- * Fixes common URL issues in image URLs
- */
+// Fix common image URL issues and provide fallback
 function fixImageUrl(url: string | null): string {
-  if (!url) return '/images/048_1.png'
+  if (!url) return '/images/048_1.png';
   
-  let fixedUrl = url.trim()
+  let fixedUrl = url.trim();
   
-  // Fix common typo: ttps:// -> https://
+  // Fix common typo in URLs
   if (fixedUrl.startsWith('ttps://')) {
-    fixedUrl = 'h' + fixedUrl
+    fixedUrl = 'h' + fixedUrl;
   }
   
-  // Add https:// if no protocol is present
+  // Add protocol if missing
   if (!fixedUrl.startsWith('http://') && !fixedUrl.startsWith('https://')) {
     if (fixedUrl.startsWith('www.') || fixedUrl.includes('.')) {
-      fixedUrl = 'https://' + fixedUrl
+      fixedUrl = 'https://' + fixedUrl;
     } else {
-      return fixedUrl
+      return fixedUrl;
     }
   }
   
-  return fixedUrl
+  return fixedUrl;
 }
 
 export default function PokemonCard({ pokemon }: PokemonCardProps) {
-  const pokemonUrl = `/pokemon/${encodeURIComponent(pokemon.name.toLowerCase())}`
+  const pokemonUrl = `/pokemon/${encodeURIComponent(pokemon.name.toLowerCase())}`;
   
-  const [imageError, setImageError] = useState(false)
-  const [imageSrc, setImageSrc] = useState(() => fixImageUrl(pokemon.image))
+  // Handle image loading with fallback
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(() => fixImageUrl(pokemon.image));
 
   const handleError = () => {
     if (!imageError) {
-      setImageError(true)
-      setImageSrc('/images/048_1.png')
+      setImageError(true);
+      setImageSrc('/images/048_1.png');
     }
-  }
-
+  };
+  // Update image when Pokemon changes
   useEffect(() => {
     if (pokemon.image) {
-      const fixed = fixImageUrl(pokemon.image)
-      setImageSrc(fixed)
-      setImageError(false)
+      const fixed = fixImageUrl(pokemon.image);
+      setImageSrc(fixed);
+      setImageError(false);
     } else {
-      setImageSrc('/images/048_1.png')
-      setImageError(false)
+      setImageSrc('/images/048_1.png');
+      setImageError(false);
     }
-  }, [pokemon.image])
+  }, [pokemon.image]);
   
   return (
     <Link href={pokemonUrl}>
@@ -94,6 +87,8 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
         </div>
       </div>
     </Link>
-  )
+  );
 }
+
+
 
