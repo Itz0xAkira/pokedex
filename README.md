@@ -3,6 +3,8 @@
 A full-stack Pokemon management application built with Next.js, GraphQL, and PostgreSQL. Search, filter, and manage Pokemon with the ability to create custom Pokemon entries.
 
 note: everything here is commited @ 5:16 am like a great dev would do :) 
+
+
 ## 🎯 Features
 
 - **Authentication System**: Secure JWT-based authentication for user registration and login
@@ -66,7 +68,7 @@ note: everything here is commited @ 5:16 am like a great dev would do :)
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd poke-new-v2
+   cd pokedex
    ```
 
 2. **Install dependencies**
@@ -296,7 +298,7 @@ This project is private and not licensed for public use.
 ## 🙏 Acknowledgments
 
 - Pokemon data sourced from [PokeAPI](https://pokeapi.co/)
-- Built as a sample project for full-stack development
+- Built as a sample project for full-stack development interview for FactoFly
 
 ---
 
