@@ -11,6 +11,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@apollo/client'
 import { ME_QUERY } from '@/lib/graphql/queries'
+import SearchPage from '@/components/SearchPage'
 
 export default function Home() {
   const router = useRouter()
@@ -43,20 +44,6 @@ export default function Home() {
     )
   }
 
-  // TODO: Replace with full SearchPage component 
-  return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">Pokemon App</h1>
-        <p className="text-gray-600 mb-4">
-          test
-        </p>
-        <div className="mt-8 p-4 border border-gray-300 rounded-lg">
-          <h2 className="text-2xl font-semibold mb-2">Status</h2>
-     
-        </div>
-      </div>
-    </main>
-  )
+  return <SearchPage />
 }
 
