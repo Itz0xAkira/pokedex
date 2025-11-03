@@ -24,7 +24,7 @@ import LoadingOverlay from '@/components/pokemon/detail/LoadingOverlay';
 import PokemonDetailLoading from '@/components/pokemon/detail/PokemonDetailLoading';
 import PokemonNotFound from '@/components/pokemon/detail/PokemonNotFound';
 import StatsChart from '@/components/pokemon/StatsChart';
-import type { Pokemon } from '@/types/pokemon';
+import type { Pokemon } from '@/types';
 
 const ME_QUERY = gql`
   query Me {

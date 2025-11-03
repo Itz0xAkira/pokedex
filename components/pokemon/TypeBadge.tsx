@@ -1,8 +1,7 @@
 import React from 'react';
+import type { TypeBadgeProps, TypeColors } from '@/types';
 
-const typeColors: {
-  [key: string]: string;
-} = {
+const typeColors: TypeColors = {
   Bug: '#A8B820',
   Dark: '#705848',
   Dragon: '#7038F8',
@@ -22,11 +21,6 @@ const typeColors: {
   Steel: '#B8B8D0',
   Water: '#6890F0'
 };
-
-interface TypeBadgeProps {
-  type: string;
-  className?: string;
-}
 
 export default function TypeBadge({ type, className = '' }: TypeBadgeProps) {
   return (

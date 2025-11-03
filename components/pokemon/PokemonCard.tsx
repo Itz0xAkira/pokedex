@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import type { PokemonCardProps } from '@/types';
 import TypeBadge from './TypeBadge';
-
-interface PokemonCardProps {
-  pokemon: {
-    id: string;
-    name: string;
-    pokedexId: number | null;
-    image: string | null;
-    types: string[];
-  };
-}
 
 // Fix common image URL issues and provide fallback
 function fixImageUrl(url: string | null): string {

@@ -16,14 +16,8 @@
 'use client'
 
 import React, { useRef } from 'react';
+import type { AdvancedSearchToggleProps } from '@/types';
 import { ChevronDown } from '../shared/Icons';
-
-interface AdvancedSearchToggleProps {
-  /** Whether the advanced search panel is currently visible */
-  showAdvanced: boolean;
-  /** Callback function when the toggle button is clicked */
-  onToggle: () => void;
-}
 
 export default function AdvancedSearchToggle({
   showAdvanced,

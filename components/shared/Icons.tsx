@@ -8,12 +8,13 @@
 'use client'
 
 import React from 'react';
+import type { IconProps } from '@/types';
 
 /**
  * ChevronDown Icon
  * A downward-pointing chevron used for dropdowns and expandable sections
  */
-export const ChevronDown = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
+export const ChevronDown = ({ className, style }: IconProps) => (
   <svg 
     className={className} 
     style={style}
@@ -37,7 +38,7 @@ export const ChevronDown = ({ className, style }: { className?: string; style?: 
  * SearchIcon
  * A magnifying glass icon used for search buttons
  */
-export const SearchIcon = ({ className }: { className?: string }) => (
+export const SearchIcon = ({ className }: IconProps) => (
   <svg 
     className={className} 
     fill="none" 
@@ -60,7 +61,7 @@ export const SearchIcon = ({ className }: { className?: string }) => (
  * Dice5 Icon
  * A dice icon used for the "Surprise Me!" button
  */
-export const Dice5 = ({ className }: { className?: string }) => (
+export const Dice5 = ({ className }: IconProps) => (
   <svg 
     className={className} 
     fill="none" 
@@ -83,7 +84,7 @@ export const Dice5 = ({ className }: { className?: string }) => (
  * Pokeball Icon
  * A Pokéball icon used in the sort dropdown
  */
-export const Pokeball = ({ className }: { className?: string }) => (
+export const Pokeball = ({ className }: IconProps) => (
   <svg 
     className={className} 
     fill="none" 
@@ -118,7 +119,7 @@ export const Pokeball = ({ className }: { className?: string }) => (
  * ChevronLeft Icon
  * A left-pointing chevron used for pagination
  */
-export const ChevronLeft = ({ className }: { className?: string }) => (
+export const ChevronLeft = ({ className }: IconProps) => (
   <svg 
     className={className} 
     fill="none" 
@@ -141,7 +142,7 @@ export const ChevronLeft = ({ className }: { className?: string }) => (
  * ChevronRight Icon
  * A right-pointing chevron used for pagination
  */
-export const ChevronRight = ({ className }: { className?: string }) => (
+export const ChevronRight = ({ className }: IconProps) => (
   <svg 
     className={className} 
     fill="none" 

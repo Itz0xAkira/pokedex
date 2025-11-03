@@ -6,7 +6,7 @@
 'use client'
 
 import React from 'react';
-import type { PokemonFilters } from '@/types/filters';
+import type { AdvancedSearchProps } from '@/types';
 import TypeBadge from './TypeBadge';
 
 const types = [
@@ -20,13 +20,6 @@ const abilities = [
   'Solar Power', 'Adaptability', 'Aftermath', 'Chlorophyll', 
   'Intimidate', 'Lightning Rod', 'Levitate', 'Immunity', 'Thick Fat'
 ];
-
-interface AdvancedSearchProps {
-  filters: PokemonFilters;
-  setFilters: (filters: PokemonFilters) => void;
-  onSearch: () => void;
-  onReset: () => void;
-}
 
 export default function AdvancedSearch({ filters, setFilters, onSearch, onReset }: AdvancedSearchProps) {
   // Toggle type or weakness filter on/off

@@ -90,7 +90,6 @@ export interface DeletePokemonMutationVariables {
 }
 
 import { PrismaClient } from '@prisma/client';
-import { PokemonStats } from './pokemon';
 
 /**
  * GraphQL Context type

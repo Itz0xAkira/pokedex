@@ -6,13 +6,8 @@
 'use client'
 
 import React from 'react';
+import type { SearchInputSectionProps } from '@/types';
 import { SearchIcon } from '../shared/Icons';
-
-interface SearchInputSectionProps {
-  searchTerm: string;
-  onSearchTermChange: (value: string) => void;
-  onSearch: () => void;
-}
 
 export default function SearchInputSection({
   searchTerm,

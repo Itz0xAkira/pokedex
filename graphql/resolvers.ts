@@ -2,6 +2,7 @@ import { Context } from './context'
 import { hashPassword, verifyPassword, getUserByEmail } from '@/lib/auth'
 import { generateToken } from '@/lib/jwt'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import type { 
   PokemonResolverParent, 
   PokemonWhereInput, 
@@ -270,7 +271,7 @@ export const resolvers = {
           pokedexId: nextPokedexId,
           types: types || [],
           abilities: abilities || [],
-          baseStats: baseStats || null,
+          baseStats: baseStats ? (baseStats as Prisma.InputJsonValue) : Prisma.JsonNull,
           description,
           species,
           isCustom: true,
@@ -314,14 +315,16 @@ export const resolvers = {
         }
       }
 
-      const data: PokemonUpdateInput = {}
+      const data: any = {}
       if (updateData.name !== undefined) data.name = updateData.name
       if (updateData.height !== undefined) data.height = updateData.height
       if (updateData.weight !== undefined) data.weight = updateData.weight
       if (updateData.image !== undefined) data.image = updateData.image
       if (updateData.types !== undefined) data.types = updateData.types
       if (updateData.abilities !== undefined) data.abilities = updateData.abilities
-      if (updateData.baseStats !== undefined) data.baseStats = updateData.baseStats
+      if (updateData.baseStats !== undefined) {
+        data.baseStats = updateData.baseStats ? (updateData.baseStats as Prisma.InputJsonValue) : Prisma.JsonNull
+      }
       if (updateData.description !== undefined) data.description = updateData.description
       if (updateData.species !== undefined) data.species = updateData.species
 

@@ -47,7 +47,7 @@ export interface GreenInfoBoxProps {}
  * AdvancedSearchToggle component props
  */
 export interface AdvancedSearchToggleProps {
-  isOpen: boolean;
+  showAdvanced: boolean;
   onToggle: () => void;
 }
 
@@ -74,7 +74,7 @@ export interface ResultsHeaderProps {
  * PokemonResultsGrid component props
  */
 export interface PokemonResultsGridProps {
-  pokemon: Pokemon[];
+  pokemon: Pokemon[] | PokemonListItem[];
   loading: boolean;
 }
 

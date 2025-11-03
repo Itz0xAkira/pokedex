@@ -20,8 +20,9 @@ import PaginationControls from './search/PaginationControls';
 import { ChevronDown } from './shared/Icons';
 
 // Hook and Query Imports
-import { usePokemonFilters, PokemonFilters } from '@/hooks/usePokemonFilters';
+import { usePokemonFilters } from '@/hooks/usePokemonFilters';
 import { POKEMONS_QUERY } from '@/lib/graphql/queries';
+import type { PokemonFilters, SortOption } from '@/types';
 
 /**
  * Main Search Page Component
@@ -34,7 +35,7 @@ export default function PokemonSearch() {
   // Search and filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [sortBy, setSortBy] = useState<'number' | 'name' | 'height-asc' | 'height-desc' | 'weight-asc' | 'weight-desc'>('number');
+  const [sortBy, setSortBy] = useState<SortOption>('number');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<10 | 20 | 50>(20);
   const [filters, setFilters] = useState<PokemonFilters>({});

@@ -6,16 +6,8 @@
 'use client'
 
 import React from 'react';
+import type { PaginationControlsProps } from '@/types';
 import { ChevronLeft, ChevronRight } from '../shared/Icons';
-
-interface PaginationControlsProps {
-  currentPage: number;
-  totalPages: number;
-  pageSize: 10 | 20 | 50;
-  totalCount: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (size: 10 | 20 | 50) => void;
-}
 
 export default function PaginationControls({
   currentPage,

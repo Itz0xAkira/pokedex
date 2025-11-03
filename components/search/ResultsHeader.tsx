@@ -6,15 +6,8 @@
 'use client'
 
 import React from 'react';
+import type { ResultsHeaderProps, SortOption } from '@/types';
 import { Dice5, Pokeball, ChevronDown } from '../shared/Icons';
-
-type SortOption = 'number' | 'name' | 'height-asc' | 'height-desc' | 'weight-asc' | 'weight-desc';
-
-interface ResultsHeaderProps {
-  onSurpriseMe: () => void;
-  sortBy: SortOption;
-  onSortChange: (value: SortOption) => void;
-}
 
 export default function ResultsHeader({
   onSurpriseMe,

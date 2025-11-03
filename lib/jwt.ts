@@ -1,9 +1,12 @@
 import jwt from 'jsonwebtoken'
 
-// Ensure JWT secret is configured
-const JWT_SECRET = process.env.JWT_SECRET
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET environment variable is required. Please set it in your .env file.')
+// Get JWT secret from environment
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET
+  if (!secret) {
+    throw new Error('JWT_SECRET environment variable is required. Please set it in your .env file.')
+  }
+  return secret
 }
 
 export interface JwtPayload {
@@ -13,13 +16,16 @@ export interface JwtPayload {
 
 // Generate JWT token with 7-day expiration
 export function generateToken(payload: JwtPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+  const secret = getJwtSecret()
+  return jwt.sign(payload, secret, { expiresIn: '7d' })
 }
 
 // Verify and decode JWT token
 export function verifyToken(token: string): JwtPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JwtPayload
+    const secret = getJwtSecret()
+    const decoded = jwt.verify(token, secret) as unknown as JwtPayload
+    return decoded
   } catch (error) {
     return null
   }

@@ -1,17 +1,5 @@
 import React, { useMemo } from 'react';
-
-interface PokemonStats {
-  hp?: number | null;
-  attack?: number | null;
-  defense?: number | null;
-  spAttack?: number | null;
-  spDefense?: number | null;
-  speed?: number | null;
-}
-
-interface StatsChartProps {
-  stats: PokemonStats | null | undefined;
-}
+import type { StatsChartProps } from '@/types';
 
 function StatsChart({ stats }: StatsChartProps) {
   const statNames: { [key: string]: string } = {

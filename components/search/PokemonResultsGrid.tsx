@@ -17,22 +17,8 @@
 'use client'
 
 import React from 'react';
+import type { PokemonResultsGridProps } from '@/types';
 import PokemonCard from '../pokemon/PokemonCard';
-
-interface Pokemon {
-  id: string;
-  name: string;
-  pokedexId: number | null;
-  image: string | null;
-  types: string[];
-}
-
-interface PokemonResultsGridProps {
-  /** Array of Pokémon to display */
-  pokemon: Pokemon[];
-  /** Whether data is currently being fetched */
-  loading: boolean;
-}
 
 export default function PokemonResultsGrid({
   pokemon,

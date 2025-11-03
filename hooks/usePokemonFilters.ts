@@ -4,21 +4,12 @@
  */
 
 import { useMemo } from 'react';
-
-export interface PokemonFilters {
-  types?: string[];
-  weaknesses?: string[];
-  height_class?: string;
-  weight_class?: string;
-  numberMin?: string;
-  numberMax?: string;
-  ability?: string;
-}
+import type { PokemonFilters, SortOption } from '@/types';
 
 interface UsePokemonFiltersProps {
   searchTerm: string;
   filters: PokemonFilters;
-  sortBy: 'number' | 'name' | 'height-asc' | 'height-desc' | 'weight-asc' | 'weight-desc';
+  sortBy: SortOption;
 }
 
 export function usePokemonFilters({
