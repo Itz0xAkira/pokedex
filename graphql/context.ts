@@ -1,31 +1,39 @@
 /**
  * GraphQL Context
  * 
- * TODO: Implement context creation for Apollo Server
- * This will:
- * - Extract JWT token from Authorization header
- * - Verify token and extract user info
- * - Provide Prisma client and user context to resolvers
+ * Creates the GraphQL context for each request.
+ * Extracts and verifies JWT token from Authorization header.
+ * Provides Prisma client and authenticated user info to resolvers.
  */
 
 import { PrismaClient } from '@prisma/client'
+import { verifyToken } from '@/lib/jwt'
+import { prisma } from '@/lib/prisma'
 
 export interface GraphQLContext {
   prisma: PrismaClient
   userId?: string
+  userEmail?: string
 }
 
-export async function createContext(): Promise<GraphQLContext> {
-  // TODO: Extract token from request headers
-  // TODO: Verify JWT token
-  // TODO: Extract userId from token
-  // TODO: Initialize Prisma client
-  
-  const prisma = new PrismaClient()
-  
+export async function createContext(req: { headers: { get: (name: string) => string | null } }): Promise<GraphQLContext> {
+  const authHeader = req.headers.get('authorization')
+  let userId: string | undefined
+  let userEmail: string | undefined
+
+  if (authHeader) {
+    const token = authHeader.replace('Bearer ', '')
+    const payload = verifyToken(token)
+    if (payload) {
+      userId = payload.userId
+      userEmail = payload.email
+    }
+  }
+
   return {
     prisma,
-    // userId: extractedUserId
+    userId,
+    userEmail,
   }
 }
 
