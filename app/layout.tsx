@@ -1,11 +1,12 @@
 /**
  * Root Layout Component
  * 
- * TODO: Add Navbar, Apollo Client wrapper, and global styles
- * This is a placeholder until we migrate the full UI
+ * Root layout with Apollo Client provider and Navbar
  */
 
 import type { Metadata } from 'next'
+import { ApolloWrapper } from '@/components/ApolloWrapper'
+import Navbar from '@/components/Navbar'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -20,7 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body suppressHydrationWarning>
+        <ApolloWrapper>
+          <Navbar />
+          {children}
+        </ApolloWrapper>
+      </body>
     </html>
   )
 }
