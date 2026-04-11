@@ -5,7 +5,7 @@ A full-stack Pokemon management application built with Next.js, GraphQL, and Pos
 note: everything here is commited @ 5:16 am like a great dev would do :) 
 
 
-## 🎯 Features
+##  Features
 
 - **Authentication System**: Secure JWT-based authentication for user registration and login
 - **Pokemon Search & Browse**: Paginated Pokemon list with advanced search capabilities
@@ -16,7 +16,7 @@ note: everything here is commited @ 5:16 am like a great dev would do :)
 - **GraphQL API**: Modern GraphQL API powered by Apollo Server
 - **Responsive Design**: Beautiful UI built with Tailwind CSS
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend**: Next.js 15, React 18, TypeScript
 - **Backend**: Next.js API Routes with GraphQL
@@ -26,13 +26,13 @@ note: everything here is commited @ 5:16 am like a great dev would do :)
 - **Styling**: Tailwind CSS
 - **Containerization**: Docker & Docker Compose
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - Node.js 20+ (or use Docker)
 - PostgreSQL 15+ (or use Docker Compose)
 - npm or yarn
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Option 1: Using Docker (Recommended)
 
@@ -103,7 +103,7 @@ note: everything here is commited @ 5:16 am like a great dev would do :)
 
    The application will be available at `http://localhost:3000`
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 poke-new-v2/
@@ -135,7 +135,7 @@ poke-new-v2/
 └── types/                 # TypeScript type definitions
 ```
 
-## 🔐 Authentication
+##  Authentication
 
 The application uses JWT-based authentication. To access protected features:
 
@@ -167,7 +167,7 @@ The application uses JWT-based authentication. To access protected features:
 
 3. Include the JWT token in subsequent requests (handled automatically by Apollo Client)
 
-## 📡 GraphQL API
+##  GraphQL API
 
 The application exposes a GraphQL API at `/api/graphql`. Key operations:
 
@@ -219,7 +219,7 @@ query GetPokemons {
 }
 ```
 
-## 🗄️ Database Schema
+##  Database Schema
 
 ### User
 - `id`: Unique identifier
@@ -242,7 +242,7 @@ query GetPokemons {
 - `createdByUserId`: User who created the Pokemon (for authorization)
 - `createdAt`, `updatedAt`: Timestamps
 
-## 📜 Available Scripts
+##  Available Scripts
 
 - `npm run dev`: Start development server
 - `npm run build`: Build for production
@@ -253,7 +253,7 @@ query GetPokemons {
 - `npm run prisma:studio`: Open Prisma Studio (database GUI)
 - `npm run prisma:seed`: Seed the database with sample data
 
-## 🐳 Docker Commands
+##  Docker Commands
 
 - `docker-compose up`: Start all services
 - `docker-compose up -d`: Start services in detached mode
@@ -261,7 +261,7 @@ query GetPokemons {
 - `docker-compose logs`: View logs
 - `docker-compose logs -f app`: Follow app logs
 
-## 🔍 Search & Filter Features
+##  Search & Filter Features
 
 - **Name Search**: Filter Pokemon by name (partial match)
 - **Height Range**: Filter by minimum and maximum height
@@ -273,7 +273,7 @@ query GetPokemons {
 - **Sorting**: Sort by name, Pokedex ID, height, or weight (ascending/descending)
 - **Pagination**: Choose page size (10, 20, or 50 items per page)
 
-## 🎨 UI Features
+##  UI Features
 
 - Modern, responsive design
 - Pokemon type badges with color coding
@@ -283,7 +283,7 @@ query GetPokemons {
 - Pokemon detail pages with navigation
 - Image galleries (regular and shiny variants)
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -291,7 +291,7 @@ query GetPokemons {
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
+##  License
 
 This project is private and not licensed for public use.
 
@@ -302,4 +302,4 @@ This project is private and not licensed for public use.
 
 ---
 
-**Gotta catch 'em all!** 🎮
+**Gotta catch 'em all!** 
